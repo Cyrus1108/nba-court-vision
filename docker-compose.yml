@@ -1,0 +1,7 @@
+services:
+  nba-app:
+    build: .
+    container_name: nba-analytics-v1
+    ports:
+      - "8501:8501"
+    restart: always
