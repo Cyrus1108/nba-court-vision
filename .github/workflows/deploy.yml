@@ -1,0 +1,37 @@
+name: Deploy NBA App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            # 1. 如果目录不存在，就创建它
+            mkdir -p ~/nba-court-vision
+            # 2. 进入目录
+            cd ~/nba-court-vision
+            # 3. 初始化 git (如果是第一次) 或者拉取最新代码
+            # 这里我们要用一个小技巧：如果 .git 文件夹不存在，说明是第一次部署
+            if [ ! -d ".git" ]; then
+              git clone https://github.com/Cyrus1108/nba-court-vision.git .
+            else
+              git pull
+            fi
+            # 4. 启动容器 (会自动构建)
+            docker compose up -d --build
+            # 5. 清理垃圾
+            docker image prune -f
