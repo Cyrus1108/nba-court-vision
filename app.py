@@ -4,7 +4,7 @@ import numpy as np
 
 st.set_page_config(page_title="NBA COURT VISION",page_icon="🏀")
 
-st.title("🏀 NBA COURT VISION")
+st.title("🏀 Cyrus's NBA COURT VISION")
 st.write("DevOps Powered Player Comparison System")
 
 st.sidebar.header("选择球员")
